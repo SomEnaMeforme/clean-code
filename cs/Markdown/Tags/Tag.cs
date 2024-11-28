@@ -3,8 +3,8 @@
     public abstract class Tag
     {
         protected Token context;
-        protected abstract string mdTag { get; }
-        protected abstract string htmlTag { get; }
+        protected abstract string MdTag { get; }
+        protected abstract string HtmlTag { get; }
         protected abstract Token SelectContext(TokenReader reader);
         public virtual string RenderToHtml(TokenReader reader)
         {

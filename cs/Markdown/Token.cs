@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Markdown;
 
-namespace Markdown
+public record Token
 {
-    public record Token
+    private string source;
+
+    public Token(int position, string source, int length)
     {
-        public int Position { get; }
-        public int Length { get; }
+        Position = position;
+        Length = length;
+        this.source = source;
+    }
 
-        private string source;
+    public int Position { get; }
+    public int Length { get; }
 
-        public string GetValue()
-        {
-            throw new NotImplementedException();
-        }
+    public string GetValue()
+    {
+        throw new NotImplementedException();
     }
 }
