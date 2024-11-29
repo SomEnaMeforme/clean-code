@@ -2,7 +2,7 @@
 
 public record Token
 {
-    private string source;
+    private readonly string source;
 
     public Token(int position, string source, int length)
     {

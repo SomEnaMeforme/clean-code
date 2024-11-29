@@ -1,16 +1,17 @@
-﻿namespace Markdown.Tags
+﻿namespace Markdown.Tags;
+
+public class Header(string markdownText, int tagStart) : Tag(markdownText, tagStart)
 {
-    public class Header : Tag
+    protected override string MdTag => "#";
+    protected override string HtmlTag => "h1";
+
+    protected override Token SelectContext(string markdownText, int tagStart)
     {
-        protected override string MdTag => "#";
-        protected override string HtmlTag => "h1";
-        protected override Token SelectContext(TokenReader reader)
-        {
-            throw new NotImplementedException();
-        }
-        protected override bool AcceptWhileContextCorrect(char current)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
+    }
+
+    protected override bool AcceptWhileContextCorrect(char current)
+    {
+        throw new NotImplementedException();
     }
 }
