@@ -4,9 +4,9 @@ namespace Markdown;
 
 public class MdParser
 {
-    public readonly MdTagsInteractionRules rules = new ();
+    public readonly MdTagsInteractionRules Rules = new ();
 
-    public static IReadOnlyDictionary<char, Dictionary<string, Func<string, int, Tag>>> mdTags = new Dictionary<char, Dictionary<string, Func<string, int, Tag>>>()
+    public static readonly IReadOnlyDictionary<char, Dictionary<string, Func<string, int, Tag>>> MdTags = new Dictionary<char, Dictionary<string, Func<string, int, Tag>>>()
     {
         {
             '_', new Dictionary<string, Func<string, int, Tag>>
