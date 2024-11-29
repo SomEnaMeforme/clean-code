@@ -3,14 +3,17 @@
 public class Bold(string markdownText, int tagStart) : Tag(markdownText, tagStart)
 {
     protected override string MdTag => "__";
-    protected override string HtmlTag => "strong";
+    protected override string HtmlTag => "strong"; 
 
-    protected override Token SelectContext(string markdownText, int tagStart)
+    public override bool AcceptIfContextEnd(int currentPosition)
     {
         throw new NotImplementedException();
     }
-
-    protected override bool AcceptWhileContextCorrect(char current)
+    public override bool AcceptIfContextCorrect(int currentPosition)
+    {
+        throw new NotImplementedException();
+    }
+    public override Token UpdateContext(int tagEnd, string sourceMdText)
     {
         throw new NotImplementedException();
     }

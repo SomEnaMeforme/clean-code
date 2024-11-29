@@ -2,22 +2,16 @@
 
 namespace Markdown.Tags;
 
-public abstract class Tag
+public abstract class Tag(string markdownText, int tagStart)
 {
-    protected Tag(string markdownText, int tagStart)
-    {
-        Context = SelectContext(markdownText, tagStart);
-        nestedTags = [];
-    }
-
-    private List<Tag> nestedTags;
-    public Token Context { get; init; }
+    protected Token Context { get; set; }
     protected abstract string MdTag { get; }
     protected abstract string HtmlTag { get; }
-    protected abstract Token SelectContext(string markdownText, int tagStart);
     public virtual string RenderToHtml()
     {
         throw new NotImplementedException();
     }
-    protected abstract bool AcceptWhileContextCorrect(char current);
+    public abstract Token UpdateContext(int tagEnd, string sourceMdText);
+    public abstract bool AcceptIfContextEnd(int currentPosition);
+    public abstract bool AcceptIfContextCorrect(int currentPosition);
 }

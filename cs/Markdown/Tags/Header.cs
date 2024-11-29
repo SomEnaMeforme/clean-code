@@ -5,12 +5,15 @@ public class Header(string markdownText, int tagStart) : Tag(markdownText, tagSt
     protected override string MdTag => "#";
     protected override string HtmlTag => "h1";
 
-    protected override Token SelectContext(string markdownText, int tagStart)
+    public override bool AcceptIfContextEnd(int currentPosition)
     {
         throw new NotImplementedException();
     }
-
-    protected override bool AcceptWhileContextCorrect(char current)
+    public override bool AcceptIfContextCorrect(int currentPosition)
+    {
+        throw new NotImplementedException();
+    }
+    public override Token UpdateContext(int tagEnd, string sourceMdText)
     {
         throw new NotImplementedException();
     }

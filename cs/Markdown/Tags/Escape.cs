@@ -7,12 +7,15 @@ public class Escape(string markdownText, int tagStart) : Tag(markdownText, tagSt
 
     public override string RenderToHtml() => $"{Context}";
 
-    protected override Token SelectContext(string markdownText, int tagStart)
+    public override bool AcceptIfContextEnd(int currentPosition)
     {
         throw new NotImplementedException();
     }
-
-    protected override bool AcceptWhileContextCorrect(char current)
+    public override bool AcceptIfContextCorrect(int currentPosition)
+    {
+        throw new NotImplementedException();
+    }
+    public override Token UpdateContext(int tagEnd, string sourceMdText)
     {
         throw new NotImplementedException();
     }
