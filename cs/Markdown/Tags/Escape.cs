@@ -5,18 +5,28 @@ public class Escape(string markdownText, int tagStart) : Tag(markdownText, tagSt
     protected override string MdTag => "\\";
     protected override string HtmlTag => "";
 
-    public override string RenderToHtml() => $"{Context}";
+    public override string RenderToHtml()
+    {
+        return $"{Context.GetValue()}";
+    }
 
     public override bool AcceptIfContextEnd(int currentPosition)
     {
-        throw new NotImplementedException();
+        return currentPosition > tagStart + 1;
     }
+
     public override bool AcceptIfContextCorrect(int currentPosition)
     {
-        throw new NotImplementedException();
+        return base.AcceptIfContextCorrect(currentPosition)
+               && currentPosition < markdownText.Length && Md.MdTags.ContainsKey(markdownText[currentPosition]);
     }
-    public override Token UpdateContext(int tagEnd, string sourceMdText)
+
+    public override void TryCloseTag(int contextEnd, string sourceMdText, out int tagEnd, List<Tag>? nested = null)
     {
-        throw new NotImplementedException();
+        Context = Md.MdTags.ContainsKey(markdownText[tagStart + 1])
+            ? new Token(tagStart + 1, markdownText, 1)
+            : new Token(tagStart, markdownText, 1);
+        tagEnd = contextEnd;
+        TagEnd = tagEnd;
     }
 }

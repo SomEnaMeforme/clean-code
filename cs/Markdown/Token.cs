@@ -16,6 +16,6 @@ public record Token
 
     public string GetValue()
     {
-        throw new NotImplementedException();
+        return new string(source.Substring(Position, Length));
     }
 }

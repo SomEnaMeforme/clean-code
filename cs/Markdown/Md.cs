@@ -1,4 +1,5 @@
 ﻿using Markdown.Tags;
+using System.Text;
 
 namespace Markdown
 {
@@ -9,8 +10,8 @@ namespace Markdown
             {
                 '_', new Dictionary<string, Func<string, int, Tag>>
                 {
-                    { "_", (markdown, tagStart) => new Italic(markdown, tagStart) },
-                    { "__", (markdown, tagStart) => new Bold(markdown, tagStart) }
+                    { "_", Italic.CreateInstance},
+                    { "__", Bold.CreateInstance}
                 }
             },
             {
@@ -27,10 +28,38 @@ namespace Markdown
                 }
             }
         };
+
+        internal static Tag GetOpenTag(int tagStart, string markdownText, out int contextStart)
+        {
+            var tagBegin = markdownText[tagStart];
+            var tags = MdTags[tagBegin];
+            var tag = tagBegin == '_' && tagStart != markdownText.Length - 1 && markdownText[tagStart + 1] == '_'
+                ? "__"  
+                : tagBegin.ToString();
+            contextStart = tagStart + tag.Length;
+            return tags[tag](markdownText, tagStart);
+        }
+
         public string Render(string markdownText)
         {
-            throw new NotImplementedException();
+            var parser = new MdParser(markdownText);
+            var tags = parser.GetTags();
+            var result = new StringBuilder();
+            var tagsStart = tags.ToDictionary(t => t.TagStart);
+            for (var i = 0; i < markdownText.Length; )
+            {
+                if (tagsStart.ContainsKey(i))
+                {
+                    result.Append(tagsStart[i].RenderToHtml());
+                    i = tagsStart[i].TagEnd++;
+                }
+                else
+                {
+                    result.Append(markdownText[i]);
+                    i++;
+                }
+            }
+            return result.ToString();
         }
     }
 }
-
