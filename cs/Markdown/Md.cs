@@ -1,4 +1,5 @@
 ﻿using Markdown.Tags;
+using System.ComponentModel.Design.Serialization;
 using System.Text;
 
 namespace Markdown
@@ -30,14 +31,19 @@ namespace Markdown
         };
 
         internal static Tag GetOpenTag(int tagStart, string markdownText, out int contextStart)
-        {
+        {           
             var tagBegin = markdownText[tagStart];
-            var tags = MdTags[tagBegin];
-            var tag = tagBegin == '_' && tagStart != markdownText.Length - 1 && markdownText[tagStart + 1] == '_'
-                ? "__"  
-                : tagBegin.ToString();
-            contextStart = tagStart + tag.Length;
-            return tags[tag](markdownText, tagStart);
+            var tags = MdTags[tagBegin].Keys.OrderByDescending(k => k.Length);
+            foreach (var tag in tags)
+            {
+                if (tag.Length + tagStart < markdownText.Length
+                    && markdownText.Substring(tagStart, tag.Length) == tag)
+                {
+                    contextStart = tagStart + tag.Length;
+                    return MdTags[tagBegin][tag](markdownText, tagStart);
+                }
+            }
+            throw new InvalidOperationException("Попытка получить несуществующий тег");
         }
 
         public string Render(string markdownText)
@@ -46,7 +52,7 @@ namespace Markdown
             var tags = parser.GetTags();
             var result = new StringBuilder();
             var tagsStart = tags.ToDictionary(t => t.TagStart);
-            for (var i = 0; i < markdownText.Length; )
+            for (var i = 0; i < markdownText.Length;)
             {
                 if (tagsStart.ContainsKey(i))
                 {
