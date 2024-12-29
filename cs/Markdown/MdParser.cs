@@ -12,18 +12,23 @@ public class MdParser(string markdownText, IReadOnlyDictionary<char, Dictionary<
 
     public Tag[] GetTags()
     {
-        var tokens = Tokenize(markdownText);
+        var lines = markdownText.Split('\n');
         var result = new List<Tag>();
-        var possibleTags = FindCorrectTags(tokens);
-        var possibleTagsStarts = possibleTags.Select(t => t.TagStart).ToHashSet();
-        var current = new ReaderPosition();
-        var tagsIterator = possibleTags.OrderBy(t => t.TagStart).GetEnumerator();
-        while (tagsIterator.MoveNext())
+        foreach (var line in lines)
         {
-            var newTag = CreateTag(current, [], tagsIterator, possibleTagsStarts);
-            if (newTag.IsTagClosed)
-                result.Add(newTag);
+            var tokens = Tokenize(markdownText);
+            var possibleTags = FindCorrectTags(tokens);
+            var possibleTagsStarts = possibleTags.Select(t => t.TagStart).ToHashSet();
+            var current = new ReaderPosition();
+            var tagsIterator = possibleTags.OrderBy(t => t.TagStart).GetEnumerator();
+            while (tagsIterator.MoveNext())
+            {
+                var newTag = CreateTag(current, [], tagsIterator, possibleTagsStarts);
+                if (newTag.IsTagClosed)
+                    result.Add(newTag);
+            }
         }
+        
         return result.ToArray();
     }
 

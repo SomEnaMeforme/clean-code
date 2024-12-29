@@ -10,10 +10,7 @@ namespace Markdown.Tags
         protected PairTag(string markdownText, int tagStart): base(markdownText, tagStart)
         {
             MarkdownText = markdownText;
-            IContextRule pairTagRule = tagStart > 0 && char.IsLetter(markdownText[tagStart - 1])
-            ? new PairTagSelectPartWordRule()
-            : new PairTagSelectFewWordsRule();
-            Rules = [new UnderscoreTagRule(), pairTagRule];
+            Rules = [new UnderscoreTagRule(), new PairTagSelectPartWordRule()];
         }
         public override void TryCloseTag(int contextEnd, string sourceMdText, out int tagEnd, List<Tag>? nested = null)
         {
@@ -33,6 +30,11 @@ namespace Markdown.Tags
         public override bool AcceptIfContextCorrect(int currentPosition)
         {
             var contextStart = TagStart + MdTag.Length;
+            if (!char.IsLetter(MarkdownText[currentPosition]) && (TagStart == 0 || !char.IsLetter(MarkdownText[TagStart - 1]))) 
+            {
+                Rules = [ new UnderscoreTagRule(), new PairTagSelectFewWordsRule()];
+            };
+
             return Rules.All(rule => rule.IsContextCorrect(MarkdownText.AsSpan().Slice(contextStart), currentPosition - contextStart, MdTag));
         }
     }
