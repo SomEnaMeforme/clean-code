@@ -3,19 +3,16 @@
 public record Token
 {
     private readonly string source;
-
+    private readonly string value;
     public Token(int position, string source, int length)
     {
         Position = position;
         Length = length;
-        this.source = source;
+        value = source.Substring(Position, Length);
     }
 
     public int Position { get; }
     public int Length { get; }
 
-    public string GetValue()
-    {
-        return new string(source.Substring(Position, Length));
-    }
+    public string GetValue() => value;
 }

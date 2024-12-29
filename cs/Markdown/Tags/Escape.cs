@@ -4,28 +4,34 @@ public class Escape(string markdownText, int tagStart) : Tag(markdownText, tagSt
 {
     protected override string MdTag => "\\";
     protected override string HtmlTag => "";
+    private Dictionary<string, string> specSymbolsRendering = new Dictionary<string, string> { 
+        { "n", "\n" }, { "t", "\t" } };
+    public override MdTagType TagType => MdTagType.Escape;
 
     public override string RenderToHtml()
     {
-        return $"{Context.GetValue()}";
+        var value = Context.GetValue();
+        return $"{(specSymbolsRendering.ContainsKey(value) ? specSymbolsRendering[value] : value)}";
     }
 
     public override bool AcceptIfContextEnd(int currentPosition)
     {
-        return currentPosition > tagStart + 1;
+        return currentPosition > TagStart + 1;
     }
 
     public override bool AcceptIfContextCorrect(int currentPosition)
     {
+        var current = MarkdownText[currentPosition];
         return base.AcceptIfContextCorrect(currentPosition)
-               && currentPosition < markdownText.Length && Md.MdTags.ContainsKey(markdownText[currentPosition]);
+               && currentPosition < MarkdownText.Length 
+               && (Md.MdTags.ContainsKey(current) || specSymbolsRendering.ContainsKey(current.ToString()));
     }
 
     public override void TryCloseTag(int contextEnd, string sourceMdText, out int tagEnd, List<Tag>? nested = null)
     {
-        Context = Md.MdTags.ContainsKey(markdownText[tagStart + 1])
-            ? new Token(tagStart + 1, markdownText, 1)
-            : new Token(tagStart, markdownText, 1);
+        Context = Md.MdTags.ContainsKey(MarkdownText[TagStart + 1]) || specSymbolsRendering.ContainsKey(MarkdownText[TagStart + 1].ToString())
+            ? new Token(TagStart + 1, MarkdownText, 1)
+            : new Token(TagStart, MarkdownText, 1);
         tagEnd = contextEnd;
         TagEnd = tagEnd;
     }

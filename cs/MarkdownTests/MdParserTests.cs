@@ -36,9 +36,10 @@ namespace MarkdownTests
         [TestCase("# Hello World!", "<h1>Hello World!</h1>", TestName = "HeaderTagWithoutParagraphEndSymbol")]
         public void MdParser_ShouldCorrectParse(string mdText, string expected)
         {
-            var parser = new MdParser(mdText);
+            var parser = new MdParser(mdText, Md.MdTags);
 
-            var toHtml = parser.GetTags()[0].RenderToHtml();
+            var tags = parser.GetTags();
+            var toHtml = tags[0].RenderToHtml();
 
             toHtml.Should().Be(expected);
         }
@@ -46,7 +47,7 @@ namespace MarkdownTests
         [TestCaseSource(nameof(DifferentTagsParseWithoutNestedAndIntersection))]
         public void MdParser_ShouldCorrectParseDifferentTags(string mdText, string[] expectedTagsToHtml)
         {
-            var parser = new MdParser(mdText);
+            var parser = new MdParser(mdText, Md.MdTags);
 
             var tags = parser.GetTags().Select(t => t.RenderToHtml());
 

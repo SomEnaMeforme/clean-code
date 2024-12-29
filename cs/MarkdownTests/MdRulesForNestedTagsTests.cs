@@ -9,18 +9,14 @@ namespace MarkdownTests
         [Test]
         public void InsideBold_ItalicShouldWork()
         {
-            var rules = new MdRulesForNestedTags();
-
-            var result = rules.IsNestedTagWorks(Bold.CreateInstance("", 0), Italic.CreateInstance("", 0));
+            var result = Tag.IsNestedTagWorks(MdTagType.Bold, MdTagType.Italic);
 
             result.Should().BeTrue();
         }
         [Test]
         public void InsideItalic_BoldShouldNotWork()
         {
-            var rules = new MdRulesForNestedTags();
-
-            var result = rules.IsNestedTagWorks(Italic.CreateInstance("", 0), Bold.CreateInstance("", 0));
+            var result = Tag.IsNestedTagWorks(MdTagType.Italic, MdTagType.Bold);
 
             result.Should().BeFalse();
         }
@@ -28,12 +24,10 @@ namespace MarkdownTests
         [Test]
         public void InsideHeader_AllTagWorks()
         {
-            var rules = new MdRulesForNestedTags();
-
             var result = new [] {
-                rules.IsNestedTagWorks(new Header("", 0), Bold.CreateInstance("", 0)),
-                rules.IsNestedTagWorks(new Header("", 0), Italic.CreateInstance("", 0)),
-                rules.IsNestedTagWorks(new Header("", 0), new Escape("", 0))};
+                Tag.IsNestedTagWorks(MdTagType.Header, MdTagType.Bold),
+                Tag.IsNestedTagWorks(MdTagType.Header, MdTagType.Italic),
+                Tag.IsNestedTagWorks(MdTagType.Header, MdTagType.Escape)};
 
             result.Should().AllBeEquivalentTo(true);
         }

@@ -8,7 +8,7 @@ namespace MarkdownTests.Tags
         [Test]
         public void ItalicTag_ShouldCorrectCalculateTagEnd()
         {
-            var openTag = Italic.CreateInstance("_Вы_", 0);
+            var openTag = new Italic("_Вы_", 0);
 
             openTag.TryCloseTag(2, "_Вы_", out int tagEnd, []);
 
@@ -17,6 +17,7 @@ namespace MarkdownTests.Tags
 
         [TestCase("_12_", false, TestName = "ReturnFalse_WhenInsideDigits")]
         [TestCase("_нач_але", true, TestName = "ReturnTrue_WhenSelectPartOfWord")]
+        [TestCase(" _нач_але", true, TestName = "ReturnTrue_WhenSelectPartOfWordAfterSpace")]
         [TestCase("в ра_зных сл_овах", false, TestName = "ReturnFalse_WhenSelectPartsOfDifferentWords1")]
         [TestCase("в раз_ных словах_", false, TestName = "ReturnFalse_WhenSelectPartsOfDifferentWords3")]
         [TestCase("в _разных словах_", true, TestName = "ReturnTrue_WhenSelectWholeWords")]
@@ -26,7 +27,7 @@ namespace MarkdownTests.Tags
             var tagStart = mdText.IndexOf('_');
             var contextEnd = mdText.LastIndexOf('_') - 1;
             var contextStart = tagStart + 1;
-            var openTag = Italic.CreateInstance(mdText, tagStart);
+            var openTag = new Italic(mdText, tagStart);
             var isContextCorrect = true;
             for (var i = contextStart; i <= contextEnd; i++)
             {

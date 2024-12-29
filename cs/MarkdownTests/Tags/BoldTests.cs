@@ -8,7 +8,7 @@ namespace MarkdownTests.Tags
         [Test]
         public void BoldTag_ShouldCorrectCalculateTagEnd()
         {
-            var openTag = Bold.CreateInstance("__Вы__a", 0);
+            var openTag = new Bold("__Вы__a", 0);
 
             openTag.TryCloseTag(3, "__Вы__a", out int tagEnd);
 
@@ -27,7 +27,7 @@ namespace MarkdownTests.Tags
             var tagStart = mdText.IndexOf('_');
             var contextEnd = mdText.LastIndexOf('_') - 2;
             var contextStart = tagStart + 2;
-            var openTag = Bold.CreateInstance(mdText, tagStart);
+            var openTag = new Bold(mdText, tagStart);
             var isContextCorrect = true;
             for (var i = contextStart; i <= contextEnd; i++)
             {
